@@ -1,27 +1,19 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SortCharactersByFrequency {
     public String frequencySort(String s) {
         Map<Character, Integer> map = new HashMap<>();
-        for (int i = 0; i < s.length(); i++) {
-            Character c = s.charAt(i);
-            if (map.containsKey(c)) {
-                map.put(c, map.get(c) + 1);
-            } else {
-                map.put(c, 1);
-            }
+        for(char c:s.toCharArray()){
+            map.put(c,map.getOrDefault(c,0)+1);
         }
-        List<Map.Entry<Character, Integer>> list = new ArrayList<>(map.entrySet());
-        list.sort(Map.Entry.comparingByValue());
+        PriorityQueue<Map.Entry<Character,Integer>> queue = new PriorityQueue<>((a,b)->{return b.getValue()-a.getValue();});
+        queue.addAll(map.entrySet());
 
         StringBuilder builder = new StringBuilder();
-        for (int i = list.size() - 1; i >= 0; i--) {
-            Map.Entry<Character, Integer> temp = list.get(i);
-            for (int j = 0; j < temp.getValue(); j++) {
-                builder.append(temp.getKey());
+        while (!queue.isEmpty()){
+            Map.Entry<Character,Integer> entry = queue.poll();
+            for(int i=0;i<entry.getValue();i++){
+                builder.append(entry.getKey());
             }
         }
         return builder.toString();
